@@ -53,12 +53,12 @@ public class BaseRetrofit {
                 .build();
     }
 
-    public static <T> T HTTPS(Class<T> t) {
-        return getInstance().getRetrofits().create(t);
+    public static <T> T HTTPS(Class<T> service) {
+        return getInstance().getRetrofits().create(service);
     }
 
-    public static <T> T HTTP(Class<T> t) {
-        return getInstance().getRetrofit().create(t);
+    public static <T> T HTTP(Class<T> service) {
+        return getInstance().getRetrofit().create(service);
     }
 
     //订阅

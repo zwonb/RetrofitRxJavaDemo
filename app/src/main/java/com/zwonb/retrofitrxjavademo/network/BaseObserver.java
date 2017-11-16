@@ -3,14 +3,13 @@ package com.zwonb.retrofitrxjavademo.network;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.google.gson.JsonSyntaxException;
-import com.zwonb.retrofitrxjavademo.AlApplication;
-import com.zwonb.retrofitrxjavademo.R;
+import com.zwonb.retrofitrxjavademo.loadding.LoadingImpl;
+import com.zwonb.retrofitrxjavademo.utils.NetworkUtils;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -33,12 +32,14 @@ public abstract class BaseObserver<E> implements Observer<BaseBean<E>> {
     private FrameLayout mLoadLayout;
     private View mLoadView;
     private Context mContext;
+    private LoadingImpl mLoading;
 
-    public BaseObserver(FrameLayout loadLayout) {
-        this.mContext = AlApplication.getAppContext();
-        mLoadView = LayoutInflater.from(mContext).inflate(R.layout.load_view, loadLayout, false);
-        mLoadLayout = loadLayout;
-        mLoadLayout.addView(mLoadView);
+    public BaseObserver(LoadingImpl loading) {
+        mLoading = loading;
+        mLoading.onStart();
+//        this.mContext = AlApplication.getAppContext();
+//        mLoadView = LayoutInflater.from(mContext).inflate(R.layout.load_view, loadLayout, false);
+//        mLoadLayout.addView(mLoadView);
 //        if (mContext instanceof Activity) {
 //            FrameLayout decorView = (FrameLayout) ((Activity) mContext).getWindow().getDecorView();
 //
@@ -63,6 +64,7 @@ public abstract class BaseObserver<E> implements Observer<BaseBean<E>> {
 //        if (!NetworkUtils.isAvailableByPing()) {
 //            d.dispose();
 //            onComplete();
+//            onError("网络异常");
 //            Toast.makeText(mContext, "请检查您的网络", Toast.LENGTH_SHORT).show();
 //        }
     }
@@ -76,22 +78,25 @@ public abstract class BaseObserver<E> implements Observer<BaseBean<E>> {
             onSuccessOther(bean.getYdCode(), bean.getYdMsg());
             switch (bean.getYdCode()) {
                 case "100004":
+                    mLoading.onNoData();
                     Toast.makeText(mContext, "没有相关数据", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
             }
-            loadViewDismiss();
+//            loadViewDismiss();
         }
     }
 
     protected void onSuccessOther(String ydCode, String ydMsg) {
     }
 
+    /**
+     * 不允许被重写
+     */
     @Override
-    public void onError(@NonNull Throwable e) {
-        loadViewDismiss();
-        Log.e(TAG, "onError: " + e.toString());
+    public final void onError(@NonNull Throwable e) {
+//        mLoading.onError();
         if (e instanceof HttpException) {
             //HTTP错误 网络错误
             HttpException httpException = (HttpException) e;
@@ -105,58 +110,46 @@ public abstract class BaseObserver<E> implements Observer<BaseBean<E>> {
                 case HttpCode.BAD_GATEWAY:
                 case HttpCode.SERVICE_UNAVAILABLE:
                 default:
-                    Log.e("binbin", "网络错误: " + httpException.code());
                     //均视为网络错误
-//                    mAlLoading.showBrokenNetworkDrawable();
+                    onError("网络错误: " + httpException.code());
+                    mLoading.onError("网络错误，错误代码：" + httpException.code() + "\n点击重试！");
                     break;
             }
-
         } else if (e instanceof TimeoutException || e instanceof SocketTimeoutException
                 || e instanceof ConnectException) {
-            Log.e("binbin", "onError: " + "连接超时");
-//            if (mAlLoading != null) {
-//                mAlLoading.showOverTimeDrawable();
-//            }
-
+            onError("连接超时");
+            mLoading.onTimeout();
         } else if (e instanceof JsonSyntaxException) {
-            Log.e("binbin", "onError: " + "Json格式出错了");
+            onError("Json格式出错了");
+            mLoading.onError("Json格式异常错误：JsonSyntaxException\n点击重试！");
             //假如导致这个异常触发的原因是服务器的问题，那么应该让服务器知道，所以可以在这里
             //选择上传原始异常描述信息给服务器
-        }
-//        else if (!ComNetWorkUtils.isNetConnected(AlApplication.getAppContext())) {
-//            //手机断网，没有网络的情况
-//            Log.e("binbin", "onError: " + "网络异常");
-//
-////            if (mAlLoading != null) {
-////                mAlLoading.showBrokenNetworkDrawable();
-////            }
-////            if (mAlHeadView != null) {//头部有转圈
-////                mAlHeadView.setAlNetWork(View.VISIBLE);//显示
-////                mAlHeadView.setAlPbar(View.GONE);
-////            }
-//
-//        }
-        else {
+        } else if (!NetworkUtils.isAvailableByPing()) {
+            //手机断网，没有网络的情况
+            onError("网络异常");
+            mLoading.onError("网络异常，请检查你的网络状态！\n点击重试！");
+        } else {
             //其他情况
-            Log.e("binbin", "onError: 未知错误==" + e.getMessage());
+            onError("未知错误==" + e.getMessage());
+            mLoading.onError("未知错误\n点击重试！");
         }
     }
 
     @Override
     public void onComplete() {
-        loadViewDismiss();
+        mLoading.onComplete();
     }
 
     protected abstract void onSuccess(E e);
 
     protected void onError(String msg) {
-        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+        Log.e("binbin", "网络请求错误: " + msg);
     }
 
-    private void loadViewDismiss() {
-        mLoadLayout.removeView(mLoadView);
-//        if (loadView != null && loadView.isShowing()) {
-//            loadView.dismiss();
-//        }
-    }
+//    private void loadViewDismiss() {
+//        mLoadLayout.removeView(mLoadView);
+////        if (loadView != null && loadView.isShowing()) {
+////            loadView.dismiss();
+////        }
+//    }
 }

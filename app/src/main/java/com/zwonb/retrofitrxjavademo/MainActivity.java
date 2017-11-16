@@ -1,9 +1,9 @@
 package com.zwonb.retrofitrxjavademo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.telephony.TelephonyManager;
-import android.view.View;
 import android.widget.TextView;
 
 import com.zwonb.retrofitrxjavademo.base.BaseToolbarActivity;
@@ -52,25 +52,31 @@ public class MainActivity extends BaseToolbarActivity {
 
     private void initView() {
         mMainText = findViewById(R.id.main_text);
-        mMainText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HashMap<String, Object> map = new HashMap<>();
-                map.put(ActValue.Act, ActValue.ElifeFirst);
-                map.put(ActValue.AgentId, "1" + "");
-                map.put(ActValue.VersionCode, "1.0");
-                map.put(ActValue.Lat, "");
-                map.put(ActValue.Lon, "");
-                map.put(ActValue.Model, Build.MODEL + "");
+        mMainText.setOnClickListener(v ->
+                startActivity(new Intent(this, Main2Activity.class)));
+    }
 
-                BaseRetrofit.SUBSCRIBE(BaseRetrofit.HTTPS(BaseApi.class).post(map),
-                        new BaseObserver<IndexInfo>(mContentViewGroup) {
-                            @Override
-                            protected void onSuccess(IndexInfo indexInfo) {
-                                mMainText.setText(indexInfo.getUserGiftText2());
-                            }
-                        });
-            }
-        });
+    private void request() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(ActValue.Act, ActValue.ElifeFirst);
+        map.put(ActValue.AgentId, "1" + "");
+        map.put(ActValue.VersionCode, "1.0");
+        map.put(ActValue.Lat, "");
+        map.put(ActValue.Lon, "");
+        map.put(ActValue.Model, Build.MODEL + "");
+
+        BaseRetrofit.SUBSCRIBE(BaseRetrofit.HTTPS(BaseApi.class).post(map),
+                new BaseObserver<IndexInfo>(mLoading) {
+                    @Override
+                    protected void onSuccess(IndexInfo indexInfo) {
+                        mMainText.setText(indexInfo.getUserGiftText2());
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void onRequestAgain() {
+        request();
     }
 }

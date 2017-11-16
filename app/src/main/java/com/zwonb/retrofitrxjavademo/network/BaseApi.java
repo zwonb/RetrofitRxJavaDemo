@@ -2,6 +2,7 @@ package com.zwonb.retrofitrxjavademo.network;
 
 import com.zwonb.retrofitrxjavademo.bean.IndexInfo;
 import com.zwonb.retrofitrxjavademo.bean.InfoBean;
+import com.zwonb.retrofitrxjavademo.bean.NovelBookBean;
 
 import java.util.Map;
 
@@ -35,4 +36,6 @@ public interface BaseApi {
     @POST("userview/")
     Observable<BaseBean<IndexInfo>> post(/*@Path("arg") String arg, */@FieldMap Map<String, Object> map);
 
+    @GET("novelView/")
+    Observable<BaseBean<NovelBookBean>> get(@QueryMap() Map<String, Object> map);
 }

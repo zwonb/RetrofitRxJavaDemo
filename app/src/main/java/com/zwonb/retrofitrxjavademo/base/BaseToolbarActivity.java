@@ -16,6 +16,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.zwonb.retrofitrxjavademo.R;
+import com.zwonb.retrofitrxjavademo.loadding.IErrorClickAgain;
+import com.zwonb.retrofitrxjavademo.loadding.LoadingImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +27,13 @@ import java.util.List;
  * Created by zyb on 2017/7/6.
  */
 
-public abstract class BaseToolbarActivity extends AppCompatActivity {
+public abstract class BaseToolbarActivity extends AppCompatActivity implements IErrorClickAgain {
 
     private List<MenuItem> menuList = new ArrayList<>();
     private ToolbarMenuListen menuListen;
     private TextView titleCenter;
     protected FrameLayout mContentViewGroup;
+    protected LoadingImpl mLoading;
 
 
     @Override
@@ -45,6 +48,14 @@ public abstract class BaseToolbarActivity extends AppCompatActivity {
 
         mContentViewGroup = findViewById(R.id.base_content_layout);
         LayoutInflater.from(this).inflate(setContentLayout(), mContentViewGroup);
+
+        //网络请求各种情况处理
+        if (mLoading == null) {
+            mLoading = new LoadingImpl(mContentViewGroup);
+        }
+        //再次请求网络回调
+        mLoading.setClickAgain(this);
+
         init();
     }
 
@@ -52,6 +63,10 @@ public abstract class BaseToolbarActivity extends AppCompatActivity {
     int setContentLayout();
 
     protected abstract void init();
+
+    //网络请求失败，重新请求
+    @Override
+    public void onRequestAgain() {}
 
     /**
      * 这个方法是设置标题菜单的，必须在onPrepareOptionsMenu方法中执行
