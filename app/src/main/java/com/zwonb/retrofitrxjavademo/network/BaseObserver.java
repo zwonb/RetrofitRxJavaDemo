@@ -1,11 +1,7 @@
 package com.zwonb.retrofitrxjavademo.network;
 
 
-import android.content.Context;
 import android.util.Log;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.google.gson.JsonSyntaxException;
 import com.zwonb.retrofitrxjavademo.loadding.LoadingImpl;
@@ -28,32 +24,12 @@ import retrofit2.HttpException;
 
 public abstract class BaseObserver<E> implements Observer<BaseBean<E>> {
 
-    private static final String TAG = "binbin";
-    private FrameLayout mLoadLayout;
-    private View mLoadView;
-    private Context mContext;
     private LoadingImpl mLoading;
 
     public BaseObserver(LoadingImpl loading) {
         mLoading = loading;
         mLoading.onStart();
-//        this.mContext = AlApplication.getAppContext();
-//        mLoadView = LayoutInflater.from(mContext).inflate(R.layout.load_view, loadLayout, false);
-//        mLoadLayout.addView(mLoadView);
-//        if (mContext instanceof Activity) {
-//            FrameLayout decorView = (FrameLayout) ((Activity) mContext).getWindow().getDecorView();
-//
-//            mLoadLayout = ((FrameLayout) ((ViewGroup) ((ContentFrameLayout) ((FitWindowsLinearLayout) ((FrameLayout) ((LinearLayout) (decorView.getChildAt(0))).getChildAt(1)).getChildAt(0)).getChildAt(1)).getChildAt(0)).getChildAt(1));
-//
-//            mChildAt = ((ViewGroup) ((ContentFrameLayout) ((FitWindowsLinearLayout) ((FrameLayout) ((LinearLayout) (decorView.getChildAt(0))).getChildAt(1)).getChildAt(0)).getChildAt(1)).getChildAt(0));
-//            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mChildAt.getLayoutParams();
-//            layoutParams.gravity = Gravity.CENTER;
-//            layoutParams.topMargin = 210;
-//            mChildAt.setLayoutParams(layoutParams);
-//            mLoadLayout.addView(mChildAt);
-//        }
     }
-
 
     /**
      * 订阅前
@@ -79,16 +55,11 @@ public abstract class BaseObserver<E> implements Observer<BaseBean<E>> {
             switch (bean.getYdCode()) {
                 case "100004":
                     mLoading.onNoData();
-                    Toast.makeText(mContext, "没有相关数据", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
             }
-//            loadViewDismiss();
         }
-    }
-
-    protected void onSuccessOther(String ydCode, String ydMsg) {
     }
 
     /**
@@ -96,7 +67,6 @@ public abstract class BaseObserver<E> implements Observer<BaseBean<E>> {
      */
     @Override
     public final void onError(@NonNull Throwable e) {
-//        mLoading.onError();
         if (e instanceof HttpException) {
             //HTTP错误 网络错误
             HttpException httpException = (HttpException) e;
@@ -137,19 +107,19 @@ public abstract class BaseObserver<E> implements Observer<BaseBean<E>> {
 
     @Override
     public void onComplete() {
-        mLoading.onComplete();
+        mLoading.onTimeout();
     }
 
     protected abstract void onSuccess(E e);
+
+    /**
+     * 请求成功后的其他状态码-由后台定
+     */
+    protected void onSuccessOther(String ydCode, String ydMsg) {
+    }
 
     protected void onError(String msg) {
         Log.e("binbin", "网络请求错误: " + msg);
     }
 
-//    private void loadViewDismiss() {
-//        mLoadLayout.removeView(mLoadView);
-////        if (loadView != null && loadView.isShowing()) {
-////            loadView.dismiss();
-////        }
-//    }
 }

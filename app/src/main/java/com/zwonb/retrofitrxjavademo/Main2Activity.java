@@ -19,8 +19,14 @@ public class Main2Activity extends BaseToolbarActivity {
     @Override
     protected void init() {
         setTitle("第二个");
+        request();
+    }
+
+    private void request() {
         Map<String,Object> map = new HashMap<>();
         map.put("act","indexList");
+        mLoading.setShowLoad(false);
+        mLoading.setLoadLayout(findViewById(R.id.load_layout));
         BaseRetrofit.SUBSCRIBE(BaseRetrofit.HTTP(BaseApi.class).get(map),
                 new BaseObserver<NovelBookBean>(mLoading) {
                     @Override
@@ -28,5 +34,10 @@ public class Main2Activity extends BaseToolbarActivity {
 
                     }
                 });
+    }
+
+    @Override
+    public void onRequestAgain() {
+        request();
     }
 }

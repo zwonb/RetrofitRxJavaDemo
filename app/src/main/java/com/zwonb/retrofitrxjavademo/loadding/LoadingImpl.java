@@ -2,6 +2,7 @@ package com.zwonb.retrofitrxjavademo.loadding;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -26,10 +27,14 @@ public class LoadingImpl {
     private LinearLayout mPatentLayout;
     private ProgressBar mProgressBar;
     private ImageView mCentreImg;
-    //    private ImageView mTimeOutImg;
-//    private ImageView mErrorImg;
-    private final TextView mContent;
+    private TextView mContent;
 
+    private boolean isShowLoad = true;
+
+    /**
+     * 每个activity都会 new 这样一个对象
+     * @param loadLayout 传入的需要显示加载布局的 FrameLayout
+     */
     public LoadingImpl(FrameLayout loadLayout) {
         mLoadLayout = loadLayout;
 
@@ -53,20 +58,7 @@ public class LoadingImpl {
         //没有数据
         LinearLayout.LayoutParams noDataParam = new LinearLayout.LayoutParams(450, 450);
         mCentreImg = new ImageView(AlApplication.getAppContext());
-//        mCentreImg.setImageResource(R.mipmap.pic_no_data);
         mCentreImg.setLayoutParams(noDataParam);
-
-        //超时
-//        LinearLayout.LayoutParams timeOutParam = new LinearLayout.LayoutParams(450, 450);
-//        mTimeOutImg = new ImageView(AlApplication.getAppContext());
-//        mTimeOutImg.setImageResource(R.mipmap.pic_no_data);
-//        mTimeOutImg.setLayoutParams(timeOutParam);
-
-        //网络错误
-//        LinearLayout.LayoutParams netErrorParam = new LinearLayout.LayoutParams(450, 450);
-//        mErrorImg = new ImageView(AlApplication.getAppContext());
-//        mErrorImg.setImageResource(R.mipmap.pic_time_out);
-//        mErrorImg.setLayoutParams(netErrorParam);
 
         //图片下面的显示文字
         LinearLayout.LayoutParams textParam = new LinearLayout.LayoutParams(
@@ -81,12 +73,38 @@ public class LoadingImpl {
     }
 
     /**
+     * 开始请求是否显示加载中的view
+     * 默认是显示
+     */
+    public void setShowLoad(boolean showLoad) {
+        isShowLoad = showLoad;
+    }
+
+    /**
+     * 设置加载view的背景颜色
+     * 默认是白色
+     */
+    public void setLoadLayoutBackgroundColor(@ColorInt int color){
+        mPatentLayout.setBackgroundColor(color);
+    }
+
+    /**
+     * 设置需要在哪个布局上面显示加载view
+     * 默认是整个不包含头部
+     */
+    public void setLoadLayout(FrameLayout loadLayout) {
+        mLoadLayout = loadLayout;
+    }
+
+    /**
      * 开始请求
      */
     public void onStart() {
         removeAllLoad();
-        mPatentLayout.addView(mProgressBar);
-        mLoadLayout.addView(mPatentLayout);
+        if (isShowLoad) {
+            mPatentLayout.addView(mProgressBar);
+            mLoadLayout.addView(mPatentLayout);
+        }
     }
 
     /**
@@ -108,10 +126,6 @@ public class LoadingImpl {
      */
     public void onTimeout() {
         setImgContent(R.mipmap.pic_time_out, "请求超时，点击重试！", true);
-//        removeAllLoad();
-//        mCentreImg.setImageResource(R.mipmap.pic_no_data);
-//        mPatentLayout.addView(mTimeOutImg);
-//        mLoadLayout.addView(mPatentLayout);
     }
 
     /**
@@ -119,18 +133,11 @@ public class LoadingImpl {
      */
     public void onError(String msg) {
         setImgContent(R.mipmap.pic_network_error, msg, true);
-//        removeAllLoad();
-//        mPatentLayout.addView(mErrorImg);
-//        mContent.setText(msg);
-//        mPatentLayout.addView(mContent);
-//        mLoadLayout.addView(mPatentLayout);
-//        mPatentLayout.setOnClickListener(v -> {
-//            if (mClickAgain != null) {
-//                mClickAgain.onRequestAgain();
-//            }
-//        });
     }
 
+    /**
+     * 统一设置显示的图片，内容，是否能点击再次请求网络
+     */
     private void setImgContent(@DrawableRes int resId, String msg, boolean isRequestAgain) {
         removeAllLoad();
         if (mLoadLayout != null) {
@@ -149,15 +156,21 @@ public class LoadingImpl {
         }
     }
 
+    /**
+     * 清除所有的view
+     */
     private void removeAllLoad() {
         if (mPatentLayout != null) {
             mPatentLayout.removeAllViews();
-        }
-        if (mLoadLayout != null) {
-            mLoadLayout.removeView(mPatentLayout);
+            if (mLoadLayout != null) {
+                mLoadLayout.removeView(mPatentLayout);
+            }
         }
     }
 
+    /**
+     * 初始化点击回调接口
+     */
     public void setClickAgain(IErrorClickAgain clickAgain) {
         mClickAgain = clickAgain;
     }
