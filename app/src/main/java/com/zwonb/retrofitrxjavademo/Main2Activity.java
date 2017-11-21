@@ -20,6 +20,7 @@ public class Main2Activity extends BaseToolbarActivity {
     protected void init() {
         setTitle("第二个");
         request();
+
     }
 
     private void request() {
