@@ -7,12 +7,6 @@ import java.util.List;
 public class NovelBookBean implements Serializable {
 
 
-    /**
-     * adNewSuspend : {"rightImg":"http://elifeimg.oss-cn-beijing.aliyuncs.com/bannerAd/1486956204468984.png","rightItem":{"url":"http://m.30mifi.com/slhd/getCoupon/index.html?source=yishenghuo","type":"10251"},"centerImg":"http://elifeimg.oss-cn-beijing.aliyuncs.com/bannerAd/1486956204468984.png","centerItem":{"url":"http://m.30mifi.com/slhd/getCoupon/index.html?source=yishenghuo","type":"10251"}}
-     * adSuspend : {"minType":"0","minUrl":"http://ceshi.yidont.com/game/jianren","minImg":"http://elifeadmin.ed68.cn/data/upload/5771eeb18f2f3.png","minIco":"http://elifeadmin.ed68.cn/data/upload/5771eeb18f2f3.png","minTitle":"小小战争","bigType":"0","bigUrl":"http://ceshi.yidont.com/game/jianren","bigImg":"http://elifeadmin.ed68.cn/data/upload/5771eeb18f2f3.png","bigIco":"http://elifeadmin.ed68.cn/data/upload/5771eeb18f2f3.png","bigTitle":"大大大掌门"}
-     * noveType : [{"noveTypeId":"1","noveTypeName":"玄 幻 魔 法","noveTypeStyle":"noveType"}]
-     * novelList : [{"novelKey":"novelStand","typeId":"3","typeTitle":"现 代 都 市","typeStyle":"noveType","novelSmallList":[[{"img":"","bookId":"189118","title":"近身兵王","author":"青光楚辞","ico":""}]]},{"novelKey":"novelSelection","typeId":"4","typeTitle":"本周精选","typeStyle":"noveType","novelSmallList":[[{"img":"","bookId":"189206","title":"巫师论坛","author":"维果","ico":"","text":"","over":"连载中","numWords":""}]]},{"novelKey":"novelRankingListOne","typeId":"2","typeTitle":"男生热搜","typeText":"男生","typeStyle":"noveType","novelNum":"01","novelImg":"","novelId":"188592","novelTitle":"我的冰山女总裁","novelText":"农家乐趣无穷","novelAuthor":"云上蜗牛","novelOver":"连载中","novelNumWords":"5万字","novelSmallList":[[{"bookId":"188600","title":"老司机带带我","text":"连载中"}]]},{"novelKey":"novelRankingListTwo","typeId":"4","typeTitle":"女生热搜","typeText":"女生","typeStyle":"noveType","novelNum":"01","novelImg":"","novelId":"189078","novelTitle":"盗天仙途","novelText":"农家乐趣无穷","novelAuthor":"荆柯守","novelOver":"连载中","novelNumWords":"5万字","novelSmallList":[[{"bookId":"189110","title":"重生猪八戒","text":"连载中"}]]}]
-     */
 
     private AdNewSuspendBean adNewSuspend;
     private AdSuspendBean adSuspend;
@@ -52,12 +46,6 @@ public class NovelBookBean implements Serializable {
     }
 
     public static class AdNewSuspendBean {
-        /**
-         * rightImg : http://elifeimg.oss-cn-beijing.aliyuncs.com/bannerAd/1486956204468984.png
-         * rightItem : {"url":"http://m.30mifi.com/slhd/getCoupon/index.html?source=yishenghuo","type":"10251"}
-         * centerImg : http://elifeimg.oss-cn-beijing.aliyuncs.com/bannerAd/1486956204468984.png
-         * centerItem : {"url":"http://m.30mifi.com/slhd/getCoupon/index.html?source=yishenghuo","type":"10251"}
-         */
 
         private String rightImg;
         private RightItemBean rightItem;
@@ -97,10 +85,6 @@ public class NovelBookBean implements Serializable {
         }
 
         public static class RightItemBean {
-            /**
-             * url : http://m.30mifi.com/slhd/getCoupon/index.html?source=yishenghuo
-             * type : 10251
-             */
 
             private String url;
             private String type;
@@ -123,10 +107,6 @@ public class NovelBookBean implements Serializable {
         }
 
         public static class CenterItemBean {
-            /**
-             * url : http://m.30mifi.com/slhd/getCoupon/index.html?source=yishenghuo
-             * type : 10251
-             */
 
             private String url;
             private String type;
@@ -150,18 +130,6 @@ public class NovelBookBean implements Serializable {
     }
 
     public static class AdSuspendBean {
-        /**
-         * minType : 0
-         * minUrl : http://ceshi.yidont.com/game/jianren
-         * minImg : http://elifeadmin.ed68.cn/data/upload/5771eeb18f2f3.png
-         * minIco : http://elifeadmin.ed68.cn/data/upload/5771eeb18f2f3.png
-         * minTitle : 小小战争
-         * bigType : 0
-         * bigUrl : http://ceshi.yidont.com/game/jianren
-         * bigImg : http://elifeadmin.ed68.cn/data/upload/5771eeb18f2f3.png
-         * bigIco : http://elifeadmin.ed68.cn/data/upload/5771eeb18f2f3.png
-         * bigTitle : 大大大掌门
-         */
 
         private String minType;
         private String minUrl;
@@ -256,11 +224,6 @@ public class NovelBookBean implements Serializable {
     }
 
     public static class NoveTypeBean {
-        /**
-         * noveTypeId : 1
-         * noveTypeName : 玄 幻 魔 法
-         * noveTypeStyle : noveType
-         */
 
         private String noveTypeId;
         private String noveTypeName;
@@ -292,22 +255,6 @@ public class NovelBookBean implements Serializable {
     }
 
     public static class NovelListBean {
-        /**
-         * novelKey : novelStand
-         * typeId : 3
-         * typeTitle : 现 代 都 市
-         * typeStyle : noveType
-         * novelSmallList : [[{"img":"","bookId":"189118","title":"近身兵王","author":"青光楚辞","ico":""}]]
-         * typeText : 男生
-         * novelNum : 01
-         * novelImg :
-         * novelId : 188592
-         * novelTitle : 我的冰山女总裁
-         * novelText : 农家乐趣无穷
-         * novelAuthor : 云上蜗牛
-         * novelOver : 连载中
-         * novelNumWords : 5万字
-         */
 
         private String novelKey;
         private String typeId;
@@ -437,13 +384,6 @@ public class NovelBookBean implements Serializable {
         }
 
         public static class NovelSmallListBean {
-            /**
-             * img :
-             * bookId : 189118
-             * title : 近身兵王
-             * author : 青光楚辞
-             * ico :
-             */
 
             private String img;
             private String bookId;
