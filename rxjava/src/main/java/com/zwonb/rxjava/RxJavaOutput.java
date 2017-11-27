@@ -17,6 +17,7 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -28,7 +29,10 @@ public class RxJavaOutput extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        readFile();
+//        readFile();
+
+//        initJust();
+        initFromArray();
     }
 
     private void readFile() {
@@ -39,7 +43,7 @@ public class RxJavaOutput extends AppCompatActivity {
             @Override
             public void subscribe(FlowableEmitter<String> e) throws Exception {
                 try {
-                    FileReader fileReader = new FileReader(Environment.getExternalStorageDirectory().getAbsolutePath()+"/test.txt");
+                    FileReader fileReader = new FileReader(Environment.getExternalStorageDirectory().getAbsolutePath() + "/test.txt");
                     BufferedReader bufferedReader = new BufferedReader(fileReader);
 
                     String str;
@@ -92,5 +96,25 @@ public class RxJavaOutput extends AppCompatActivity {
                         Log.e("binbin", "onComplete");
                     }
                 });
+    }
+
+    private void initJust() {
+        Observable.just("Hello", "Hi", "Aloha")
+                // 将会依次调用：
+                // onNext("Hello");
+                // onNext("Hi");
+                // onNext("Aloha");
+                // onCompleted();
+                .subscribe(s -> Log.e("binbin", "initJust: " + s));
+    }
+
+    private void initFromArray() {
+        String[] str = {"Hello", "Hi", "Aloha"};
+//        List<String> str = new ArrayList<>();
+//        str.add("Hello");
+//        str.add("Hi");
+//        str.add("Aloha");
+        Observable.fromArray(str)
+                .subscribe(s -> Log.e("binbin", "initFromArray: " + s));
     }
 }
